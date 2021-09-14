@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// import './App.less';
+// import 'antd/dist/antd.variable.min.css';
+// import 'antd/dist/antd.css';
+// import 'antd/dist/antd.variable.css'
+import  './styles/App.less'
+
+import AppRouter from './components/AppRouter';
+import {ConfigProvider} from "antd";
+import {ConfigConsumerProps, ConfigProviderProps} from "antd/es/config-provider";
+
+
+type ConfigProps = {
+    theme: any,
+};
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    return (
+        <div>
+            <AppRouter />
+        </div>
   );
 }
 
 export default App;
+
