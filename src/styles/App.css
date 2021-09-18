@@ -1,0 +1,38 @@
+
+/*@import '~antd/dist/antd.variable.min.css';*/
+/*@import '~antd/dist/antd.dark.css';*/
+/*@import '~antd/dist/antd.variable.min.css';*/
+@import '~antd/dist/antd.css';
+
+/*LoginPage*/
+.login-form {
+  max-width: 300px;
+}
+.login-form-forgot {
+  float: right;
+}
+.ant-col-rtl .login-form-forgot {
+  float: left;
+}
+.login-form-button {
+  width: 100%;
+}
+
+/*AdminPage*/
+.logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+  /*background: #001529;*/
+}
+[data-theme="dark"] .site-layout .site-layout-background {
+  background: #141414;
+}
+
+/*h1, h2, h3, h4, h5 {*/
+/*  margin: 0;*/
+/*}*/

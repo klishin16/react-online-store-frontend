@@ -1,28 +1,34 @@
-import React, {useState} from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import React from 'react';
+import {Button, Checkbox, Form, Input, Row, Typography} from 'antd';
+    import {LockOutlined, UserOutlined} from '@ant-design/icons';
+import {LoginDTO} from "../models/IUser";
+import {userTypedSelector} from "../hooks/userTypedSelector";
+import {useActions} from "../hooks/useActions";
+import {RouteNames} from "../routes/routerPaths";
 
 
 const LoginForm = () => {
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
-        setLoading(true)
+    const {login} = useActions()
+
+    const submit = (loginDTO: LoginDTO) => {
+        login(loginDTO, RouteNames.ADMIN)
     };
 
-    const [loading, setLoading] = useState(false)
+    const { isLoading, error } = userTypedSelector(state => state.auth)
 
     return (
         <Form
             name="normal_login"
             className="login-form"
             initialValues={{ remember: true }}
-            onFinish={onFinish}
+            onFinish={submit}
         >
+            {error && <Row><Typography.Text style={{color: 'red'}}>{error}</Typography.Text></Row>}
             <Form.Item
                 name="email"
                 rules={[{ required: true, message: 'Please input your Email!' }]}
             >
-                <Input style={{background: "#000"}} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
             </Form.Item>
             <Form.Item
                 name="password"
@@ -45,7 +51,7 @@ const LoginForm = () => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button" loading={loading}>
+                <Button type="primary" htmlType="submit" className="login-form-button" loading={isLoading}>
                     Log in
                 </Button>
                 Or <a href="">register now!</a>

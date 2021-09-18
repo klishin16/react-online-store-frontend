@@ -1,21 +1,35 @@
-import React from 'react';
-// import './App.less';
-// import 'antd/dist/antd.variable.min.css';
-// import 'antd/dist/antd.css';
-// import 'antd/dist/antd.variable.css'
-import  './styles/App.less'
+import React, {useEffect} from 'react';
+// import './App.css';
+
+import './styles/themes/theme.light.less'
+import './styles/themes/theme.dark.less'
+import './styles/App.css'
+
 
 import AppRouter from './components/AppRouter';
-import {ConfigProvider} from "antd";
-import {ConfigConsumerProps, ConfigProviderProps} from "antd/es/config-provider";
-
-
-type ConfigProps = {
-    theme: any,
-};
+import {userTypedSelector} from "./hooks/userTypedSelector";
+import {Themes} from "./store/reducers/userSettings/types";
 
 
 function App() {
+    const { theme } = userTypedSelector(state => state.them)
+
+    useEffect(() => {
+        downloadTheme(theme)
+        console.log("Theme downloaded!");
+    }, [theme])
+
+    const downloadTheme = (theme: Themes) => {
+        if (theme === Themes.LIGHT) {
+            document.body.classList.remove('dark')
+            document.body.classList.add('light')
+            // return import((`./styles/themes/theme.light.less`));
+        } else {
+            document.body.classList.remove('light')
+            document.body.classList.add('dark')
+            // return import((`./styles/themes/theme.dark.less`));
+        }
+    }
 
     return (
         <div>
