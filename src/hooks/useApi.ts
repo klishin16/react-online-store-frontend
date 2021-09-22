@@ -1,13 +1,13 @@
 import useRequest from "./useRequest";
-import axios, {AxiosRequestConfig} from "axios";
+import axios from "axios";
 import {userTypedSelector} from "./userTypedSelector";
-import {BASE_BACKEND_URL} from "../config/constants";
 import {RequestBuilder} from "../functions/RequestBuilder";
 
 
 export enum HttpMethods {
     GET = "get",
     POST = "post",
+    PATCH = "patch",
     DELETE = "delete"
 }
 
@@ -28,6 +28,17 @@ export function usePOSTApi<ReqData, ResponseData> (url: string, isNeedAuth = tru
 
     return useRequest<ResponseData>(() => axios(requestBuilder.build()))
 }
+
+// export function usePATCHApi<RequestData, ResponseData> (url: string, isNeedAuth = true): [ResponseData | null, boolean, string, Function] {
+//     const requestBuilder = new RequestBuilder(url)
+//         .setMethod(HttpMethods.PATCH)
+//         .includeToken(userTypedSelector(state => state.auth).token!)
+//         .addData(reqData)
+//
+//     const [data, loading, error, e] = useExtendedRequest<RequestData, ResponseData>()
+//     //() => axios(requestBuilder.build())
+//     return [data, loading, error, execution
+// }
 
 export function useDELETEApi<ResponseData> (url: string, isNeedAuth = true, isExecute = true): [ResponseData | null, boolean, string, Function] {
     const requestBuilder = new RequestBuilder(url)

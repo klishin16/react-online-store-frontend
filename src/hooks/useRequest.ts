@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import {AxiosResponse} from "axios";
+import {loader} from "webpack";
 
-export default function<Data> (request: () => Promise<AxiosResponse<Data>>, execute = true): [Data | null, boolean, string, Function] {
+export default function <Data> (request: () => Promise<AxiosResponse<Data>>, execute = true): [Data | null, boolean, string, Function] {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<Data | null>(null)
     const [error, setError] = useState("")

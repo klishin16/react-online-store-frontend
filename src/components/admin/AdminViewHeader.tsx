@@ -11,7 +11,7 @@ export interface IBreadcrumbRoute {
 interface IAdminViewHeaderProps {
     title: string;
     subTitle: string
-    onBack?: Function;
+    onBack?: (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     breadcrumbPath?: IBreadcrumbRoute[]
 }
 
@@ -23,7 +23,6 @@ const PageHeaderWrapper = styled.div`
 
 const AdminViewHeader: React.FC<IAdminViewHeaderProps> = ({title, subTitle, ...rest}) => {
     const routes = rest.breadcrumbPath
-    console.log(routes)
 
     // const titleElem = <Typography.Title level={3} style={{}}>{title}</Typography.Title>
 
@@ -31,13 +30,12 @@ const AdminViewHeader: React.FC<IAdminViewHeaderProps> = ({title, subTitle, ...r
         <PageHeaderWrapper>
             <PageHeader
                 className="site-page-header"
-                // @ts-ignore
-                onBack={rest.onBack ? () => rest.onBack() : undefined}
+                onBack={rest.onBack}
                 breadcrumb={
                     <Breadcrumb>
                         {routes ?
                             routes.map((route, index) =>
-                                <Breadcrumb.Item>
+                                <Breadcrumb.Item key={index}>
                                     <Link to={routes.slice(0, index + 1).reduce((accumulatedPath, route) => accumulatedPath + route.path, '')}>{route.breadcrumbName}</Link>
                                 </Breadcrumb.Item>
                             )

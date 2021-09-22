@@ -7,18 +7,20 @@ import {
     RollbackOutlined,
     SettingOutlined,
     TeamOutlined,
-    UnorderedListOutlined
+    UnorderedListOutlined,
+    MobileOutlined
 } from '@ant-design/icons';
 import AdminSettings from "../components/admin/AdminSettings";
-import AdminUsersListView from "../components/admin/AdminUsersListView";
+import AdminUsersListView from "../components/admin/users/AdminUsersListView";
 import StatisticView from "../components/admin/StatisticView";
 import {useActions} from "../hooks/useActions";
 import {Link, Route, useHistory, useRouteMatch} from "react-router-dom";
 import {RouteNames} from "../routes/routerPaths";
 import {IBreadcrumbRoute} from "../components/admin/AdminViewHeader";
 import styled from "styled-components";
-import AdminDevicesView from "../components/admin/AdminDevicesView";
-import AdminCategoriesView from "../components/admin/AdminCategoriesView";
+import AdminDevicesView from "../components/admin/devices/AdminDevicesView";
+import AdminCategoriesView from "../components/admin/categories/AdminCategoriesView";
+import AdminBrandsView from "../components/admin/brands/AdminBrandsView";
 
 const {Header, Footer, Sider} = Layout;
 
@@ -30,6 +32,7 @@ export enum AdminViews {
     STATISTICS = "/statistics",
     DEVICES = "/devices",
     CATEGORIES = "/categories",
+    BRANDS = "/brands",
     OTHER = "/other"
 }
 
@@ -73,6 +76,11 @@ const menuItems: menuItem[] = [
         title: "Categories",
         icon: <UnorderedListOutlined/>,
         viewName: AdminViews.CATEGORIES
+    },
+    {
+        title: "Brands",
+        icon: <MobileOutlined />,
+        viewName: AdminViews.BRANDS
     },
     {
         title: "Settings",
@@ -124,7 +132,6 @@ const AdminPage: React.FC = (props) => {
                 </AdminPageHeader>
 
                 <ViewsWrapper>
-
                     <Route exact path={path + AdminViews.STATISTICS}>
                         <StatisticView breadcrumbPath={currentBreadcrumbPath}/>
                     </Route>
@@ -139,6 +146,9 @@ const AdminPage: React.FC = (props) => {
                     </Route>
                     <Route path={path + AdminViews.CATEGORIES}>
                         <AdminCategoriesView breadcrumbPath={currentBreadcrumbPath}/>
+                    </Route>
+                    <Route path={path + AdminViews.BRANDS}>
+                        <AdminBrandsView breadcrumbPath={currentBreadcrumbPath}/>
                     </Route>
                 </ViewsWrapper>
                 <Footer style={{textAlign: 'center'}}>©2021 Created by klishin16</Footer>

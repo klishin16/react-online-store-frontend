@@ -1,11 +1,11 @@
 import {useGetApi} from "./useApi";
-import {useCallback} from "react";
+
 type OptionProps = {
     label: string,
     value: number
 }
 
-export default function<Data> (dataUrl: string, dataSerializer: (data: Data) => OptionProps[], defaultValue?: string) {
+export default function<Data> (dataUrl: string, dataSerializer: (data: Data) => OptionProps[], defaultValue?: number) {
     const [data, loading, error, execution] = useGetApi<Data>(dataUrl, true, false);
 
     function onChange(value: any) {
@@ -17,7 +17,7 @@ export default function<Data> (dataUrl: string, dataSerializer: (data: Data) => 
     }
 
     function onSearch(val: any) {
-        console.log('search:', val);
+        console.log('devices:', val);
     }
 
     function filterOption (input: string, option: any): boolean {
@@ -38,6 +38,9 @@ export default function<Data> (dataUrl: string, dataSerializer: (data: Data) => 
         options,
         filterOption,
         onDropdownVisibleChange,
-        defaultValue
+        defaultValue,
+        onBlur,
+        onChange,
+        onSearch
     }
 }

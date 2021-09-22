@@ -7,7 +7,7 @@ import {
     SetTokenAction,
     SetUserAction
 } from "./types";
-import {AppDispatch} from "../../index";
+import {AppDispatch} from "../../store";
 import {makeRequest} from "../../../hooks/http";
 import {RouteNames} from "../../../routes/routerPaths";
 import {HttpMethods} from "../../../hooks/useApi";

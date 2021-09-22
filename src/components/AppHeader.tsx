@@ -1,9 +1,11 @@
 import React from 'react';
-import {Menu} from "antd";
+import {Button, Card, Menu} from "antd";
 import {RouteNames} from "../routes/routerPaths";
 import styled from "styled-components";
-import {Header} from "antd/es/layout/layout";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import {userTypedSelector} from "../hooks/userTypedSelector";
+import {LoginOutlined} from '@ant-design/icons';
+import Title from "antd/es/typography/Title";
 
 
 const AppLogo = styled.div`
@@ -18,7 +20,7 @@ const HeaderWrapper = styled.div`
       display: flex;
     `
 
-const HeaderMenusWrapper = styled.div`
+const HeaderLinksWrapper = styled.div`
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -28,25 +30,35 @@ const AppHeader = () => {
 
     const router = useHistory()
 
+    const { isAuth } = userTypedSelector(state => state.auth)
+
+    const authLinks = isAuth ?
+        <>
+            <Button type={"link"} onClick={() => router.push(RouteNames.ADMIN)} key="5">Admin</Button>
+            <Button type={"link"} onClick={() => router.push(RouteNames.BASKET)} key="6">Basket</Button>
+        </>
+        :
+        <>
+            <Button type={"link"} icon={<LoginOutlined />} onClick={() => router.push(RouteNames.LOGIN)} key="5">Login</Button>
+            <Button type={"link"} onClick={() => router.push(RouteNames.REGISTRATION)} key="6">Registration</Button>
+        </>
 
     return (
-        <Header style={{position: 'fixed', zIndex: 1, width: '100%'}}>
+        <Card type={"inner"} style={{position: 'fixed', zIndex: 1, width: '100%'}}>
             <HeaderWrapper>
-                <AppLogo/>
-                <HeaderMenusWrapper>
-                    <Menu style={{width: '300px'}} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-                        <Menu.Item key="1">nav 1</Menu.Item>
-                        <Menu.Item key="2">nav 2</Menu.Item>
-                        <Menu.Item key="3">nav 3</Menu.Item>
-                    </Menu>
-                    <Menu style={{width: '200px'}} theme="dark" mode="horizontal">
-                        <Menu.Item onClick={() => router.push(RouteNames.LOGIN)} key="4">Login</Menu.Item>
-                        <Menu.Item onClick={() => router.push(RouteNames.ADMIN)} key="5">Admin</Menu.Item>
-                    </Menu>
-                </HeaderMenusWrapper>
+                {/*<AppLogo/>*/}
+                <HeaderLinksWrapper>
+                    <div style={{padding: '0 50px', display: "flex"}}>
+                        <Link to={RouteNames.INDEX}><Title level={3} style={{marginBottom: 0}}>REACT SHOP</Title></Link>
+                        <Link to={RouteNames.DEVICES}>Devices</Link>
+                    </div>
+                    <div style={{width: '200px'}} >
+                        {authLinks}
+                    </div>
+                </HeaderLinksWrapper>
             </HeaderWrapper>
 
-        </Header>
+        </Card>
     );
 };
 

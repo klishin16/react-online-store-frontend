@@ -1,8 +1,7 @@
 import React from 'react';
-import {Button, Form, Input, Modal, Radio, Select} from 'antd';
-import {InfoCircleOutlined} from '@ant-design/icons';
-import useSelect from "../../hooks/useSelect";
-import {ICategory} from "../../models/ICategory";
+import {Form, Input, Modal, Select} from 'antd';
+import useSelect from "../../../hooks/useSelect";
+import {ICategory} from "../../../models/ICategory";
 
 
 export interface CategoryCreationValues {
@@ -30,7 +29,7 @@ const CategoryCreationForm:React.FC<ICategoryCreateFormProps> = ({modalTitle, co
                 }
             }
         ),
-        "Не выбран"
+        -1
     )
 
     function onOk() {

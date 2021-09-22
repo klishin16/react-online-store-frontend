@@ -1,21 +1,20 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Checkbox, Divider, Form, Layout, Row, Select, Tag, Typography} from "antd";
-import {IRole} from "../models/IRole";
-import {ICategory} from "../models/ICategory";
-import useSelect from "../hooks/useSelect";
-import ButtonWithConfirm from "./ButtonWithConfirm";
-import {useDELETEApi} from "../hooks/useApi";
+import {Button, Card, Divider, Dropdown, Form, Layout, Menu, Row, Select, Typography} from "antd";
+import {ICategory} from "../../../models/ICategory";
+import useSelect from "../../../hooks/useSelect";
+import ButtonWithConfirm from "../../ButtonWithConfirm";
+import {useDELETEApi} from "../../../hooks/useApi";
 import {useHistory} from "react-router-dom";
-import {OptionProps} from "antd/es/mentions";
+import {DownOutlined, UnorderedListOutlined} from '@ant-design/icons';
 
 
 interface ICategoryInfoProps {
     category: ICategory
 }
 
-const { Text } = Typography
+const {Text} = Typography
 
-const CategoryInfoCard:React.FC<ICategoryInfoProps> = ({category}) => {
+const CategoryInfoCard: React.FC<ICategoryInfoProps> = ({category}) => {
     const history = useHistory()
     const selectParams = useSelect<ICategory[]>(
         '/categories',
@@ -27,18 +26,26 @@ const CategoryInfoCard:React.FC<ICategoryInfoProps> = ({category}) => {
             }
         ),
         // category.categoryId != null ? {value: category.categoryId, label: category.categoryId.toString()} : {label: "Null", value: null}
-        category.categoryId != null ? category.categoryId : "",
+        category.categoryId ? category.categoryId : -1,
     )
 
     const [removeResponse, removeLoading, error, execution] = useDELETEApi(`/categories/${category.id}`, true, false)
+
     function removeCategory() {
         execution()
     }
+
     useEffect(() => {
         if (removeResponse && !error) {
             history.goBack()
         }
     }, [removeResponse]);
+
+    const menuItems = category.innerCategories?.map(innerCategory =>
+        <Menu.Item key="1" icon={<UnorderedListOutlined/>}>
+            <Text onClick={() => history.push(`/admin/categories/${innerCategory.id}`)}>{innerCategory.name}</Text>
+        </Menu.Item>
+    )
 
     return (
         <Layout>
@@ -47,7 +54,7 @@ const CategoryInfoCard:React.FC<ICategoryInfoProps> = ({category}) => {
                     <Text>CategoryID: </Text>
                     <Text>{category.id}</Text>
                 </Row>
-                <Divider />
+                <Divider/>
                 <Row justify={"space-between"}>
                     <Text>Category: </Text>
                     <Text>{category.name}</Text>
@@ -63,12 +70,22 @@ const CategoryInfoCard:React.FC<ICategoryInfoProps> = ({category}) => {
                         />
                     </Form.Item>
                 </Row>
-                <Divider />
+                <Divider/>
                 <Row justify={"space-between"}>
                     <Text>Inner categories: </Text>
-                    <Text>{category.innerCategories?.length}</Text>
+
+                    {category.innerCategories.length ?
+                        <Dropdown overlay={<Menu>{menuItems}</Menu>}>
+                            <Button>
+                                Inner categories <DownOutlined/>
+                            </Button>
+                        </Dropdown>
+                        :
+                        <Text>Отсутствуют</Text>}
                 </Row>
-                <Divider />
+
+                <Divider/>
+
                 <Row justify={"end"}>
                     <Button style={{color: "green", borderColor: "green", marginRight: '.7vw'}}>Save</Button>
                     <ButtonWithConfirm

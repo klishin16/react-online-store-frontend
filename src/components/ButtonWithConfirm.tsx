@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect} from 'react';
-import {Button, ButtonProps, Popconfirm, PopconfirmProps} from "antd";
+import React, {useEffect} from 'react';
+import {Button, ButtonProps, Popconfirm} from "antd";
 
 interface IButtonWithConfirmProps extends ButtonProps {
         onConfirm: (e?: React.MouseEvent<HTMLElement, MouseEvent> | undefined) => void,

@@ -5,4 +5,5 @@ export interface IDevice {
     sale: number | null;
     availability: number;
     brandId: number;
+    image: string | null;
 }

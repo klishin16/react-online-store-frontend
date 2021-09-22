@@ -1,8 +1,6 @@
 import React from 'react';
 import {Button, Card, Checkbox, Divider, Form, Input, Layout, Row, Select, Typography,} from "antd";
-import {IUserFull} from "../models/IUser";
-import useSelect from "../hooks/useSelect";
-import {ICategory} from "../models/ICategory";
+import {IUserFull} from "../../../models/IUser";
 
 interface IUserInfoProps {
     user: IUserFull

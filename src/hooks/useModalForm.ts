@@ -2,7 +2,7 @@ import React from "react";
 import {HttpMethods} from "./useApi";
 import axios from "axios";
 import {message} from "antd";
-import { RequestBuilder } from "../functions/RequestBuilder";
+import {RequestBuilder} from "../functions/RequestBuilder";
 import {userTypedSelector} from "./userTypedSelector";
 
 
@@ -11,29 +11,48 @@ type UseModalType = [
     modalProps: Object
 ]
 
-export default function <FromData>(modalTitle: string, url: string) {
+export default function <Data>(modalTitle: string, url: string, withFiles = false) {
     const [visible, setVisible] = React.useState(false);
     const [confirmLoading, setConfirmLoading] = React.useState(false);
-    const { token } = userTypedSelector(state => state.auth)
+    const [errors, setErrors] = React.useState<string[]>([]);
+    const {token} = userTypedSelector(state => state.auth)
 
     const showModal = () => {
         setVisible(true);
     };
 
-    const onCreate = (formData: FromData) => { //TODO  в постапи возвращать опционально обект request builder а
+    const onCreate = (data: Data): void | string[] => { //TODO  в постапи возвращать опционально обект request builder а
+        setErrors([])
         setConfirmLoading(true);
-        const rb = new RequestBuilder(url, HttpMethods.POST, formData, {}).includeToken(token!)
-        console.log("onCreate")
-        try {
-            axios(rb.build()).finally(() => {
-                setConfirmLoading(false);
-                message.success("Created successfully!")
-                setVisible(false)
-            })
-        } catch (e: unknown) {
+
+        const formData = new FormData()
+        for (let key in data) {
             // @ts-ignore
-            message.error(e.toString())
+            formData.append(key, data[key])
         }
+
+        const requestData = withFiles ? formData : data
+
+        const rb = new RequestBuilder(url, HttpMethods.POST, requestData, {}).includeToken(token!)
+        console.log("onCreate")
+        setTimeout(() => {
+            axios(rb.build())
+                .then(() => {
+                    message.success("Created successfully!")
+                    setVisible(false)
+                })
+                .catch(reason => {
+                    if (reason.response.stats === 200) {
+                        setErrors(reason.response.data)
+                    } else {
+                        setErrors([reason.name])
+                    }
+
+                })
+                .finally(() => setConfirmLoading(false)
+                )
+        }, 500)
+
     };
 
 
@@ -48,6 +67,7 @@ export default function <FromData>(modalTitle: string, url: string) {
         confirmLoading,
         visible,
         onCreate,
-        onCancel
+        onCancel,
+        errors
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/auth/LoginForm";
 import styled from "styled-components";
 import {Card} from "antd"; //TODO удалить
 

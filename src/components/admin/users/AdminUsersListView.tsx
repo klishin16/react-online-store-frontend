@@ -1,16 +1,16 @@
 import React from 'react';
 import {Layout, Table, Tag} from "antd";
-import AdminViewHeader, {IBreadcrumbRoute} from "./AdminViewHeader";
+import AdminViewHeader, {IBreadcrumbRoute} from "../AdminViewHeader";
 import {Content} from "antd/es/layout/layout";
-import {IRole} from "../../models/IRole";
-import {IUser} from "../../models/IUser";
-import {useGetApi} from "../../hooks/useApi";
-import {generateTableConfig} from "./AdminDevicesView";
+import {IRole} from "../../../models/IRole";
+import {IUser} from "../../../models/IUser";
+import {useGetApi} from "../../../hooks/useApi";
+import {generateTableConfig} from "../devices/AdminDevicesView";
 import {Link, useRouteMatch, Route} from "react-router-dom";
-import StatisticView from "./StatisticView";
-import {AdminViews} from "../../pages/AdminPage";
+import StatisticView from "../StatisticView";
+import {AdminViews} from "../../../pages/AdminPage";
 import AdminUserDetailView from "./AdminUserDetailView";
-import {IAdminViewProps} from "./types";
+import {IAdminViewProps} from "../types";
 
 
 interface IAdminUsersViewProps extends IAdminViewProps {}
@@ -76,8 +76,7 @@ const AdminUsersListView:React.FC<IAdminUsersViewProps> = ({breadcrumbPath}) => 
                 </Layout>
             </Route>
             <Route exact path={`${path}/:userId`}>
-                <AdminUserDetailView breadcrumbPath={currentBreadcrumbPath} onClose={() => {
-                }}/>
+                <AdminUserDetailView breadcrumbPath={currentBreadcrumbPath} />
             </Route>
         </div>
 
