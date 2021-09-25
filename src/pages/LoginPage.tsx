@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import LoginForm from "../components/auth/LoginForm";
 import styled from "styled-components";
 import {Card} from "antd";
-import {useActions} from "../hooks/useActions"; //TODO удалить
 
 
 const LoginPageWrapper = styled.div`

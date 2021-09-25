@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Carousel, Col, Divider, Layout, Row, Select, Space, Typography} from "antd";
+import {Card, Col, Divider, Layout, Row, Typography} from "antd";
 import {Content, Footer} from "antd/es/layout/layout";
 import styled from "styled-components";
 import AppHeader from "../components/AppHeader";
-import {UnorderedListOutlined} from "@ant-design/icons";
-import Search from "antd/es/input/Search";
 import Title from "antd/es/typography/Title";
 import SideCatalog from "../components/SideCatalog";
 import {Route, useRouteMatch} from "react-router-dom";
@@ -38,7 +36,7 @@ const CategoriesCardsWrapper = styled.div`
 const IndexPage = () => {
     const [sidebarVisible, setSidebarVisible] = useState(false);
 
-    let {path, url} = useRouteMatch();
+    let {path} = useRouteMatch();
 
     const categoryCard =
         <Card title={"Category"} headStyle={{textAlign: 'center'}}>

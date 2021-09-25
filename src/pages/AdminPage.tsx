@@ -3,12 +3,12 @@ import {Button, Layout, Menu, Row} from 'antd';
 import {
     FileOutlined,
     GiftOutlined,
+    MobileOutlined,
     PieChartOutlined,
     RollbackOutlined,
     SettingOutlined,
     TeamOutlined,
-    UnorderedListOutlined,
-    MobileOutlined
+    UnorderedListOutlined
 } from '@ant-design/icons';
 import AdminSettings from "../components/admin/AdminSettings";
 import AdminUsersListView from "../components/admin/users/AdminUsersListView";
@@ -41,7 +41,7 @@ export enum AdminViews {
 const AdminPageHeader = styled(Header)`
   z-index: 1;
   padding: 0;
-  box-shadow: rgba(0, 21, 41, 0.12) 0px 1px 4px 0px
+  box-shadow: rgba(0, 21, 41, 0.12) 0 1px 4px 0
 `
 
 const ViewsWrapper = styled.div`
@@ -97,7 +97,7 @@ const menuItems: menuItem[] = [
 ]
 
 
-const AdminPage: React.FC = (props) => {
+const AdminPage: React.FC = () => {
 
     const history = useHistory()
     const {logout} = useActions()

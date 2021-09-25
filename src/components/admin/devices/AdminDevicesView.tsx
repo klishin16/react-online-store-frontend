@@ -11,31 +11,10 @@ import {RedoOutlined} from "@ant-design/icons";
 import {AppColors} from "../../../styles/colors";
 import useModalForm from "../../../hooks/useModalForm";
 import DeviceCreationForm, {DeviceCreationValues} from "./DeviceCreationForm";
+import {generateTableConfig} from "../../../functions/TablePropsBuilder";
 
 
 interface IAdminProductsViewProps extends IAdminViewProps {
-}
-
-export type TableColumnProps = {
-    title: string,
-    dataIndex: string,
-    key: string,
-    render?: any
-}
-export type generateTableColumnProps = {
-    title: string,
-    render?: any
-}
-
-export function generateTableConfig(columnProps: generateTableColumnProps[]): TableColumnProps[] {
-    return columnProps.map((columnTitle: generateTableColumnProps) => {
-        return {
-            title: columnTitle.title.length >= 2 ? columnTitle.title[0].toUpperCase() + columnTitle.title.slice(1) : columnTitle.title,
-            dataIndex: columnTitle.title,
-            key: columnTitle.title,
-            render: columnTitle.render
-        }
-    })
 }
 
 const AdminDevicesView: React.FC<IAdminProductsViewProps> = ({breadcrumbPath}) => {

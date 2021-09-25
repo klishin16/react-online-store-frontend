@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Col, Divider, Form, Image, Input, Layout, message, Row, Select, Typography} from "antd";
+import {Button, Card, Col, Divider, Form, Image, Input, Layout, message, Row, Select} from "antd";
 import ButtonWithConfirm from "../../ButtonWithConfirm";
 import {useHistory} from "react-router-dom";
 import {IDevice} from "../../../models/IDevice";
@@ -17,7 +17,6 @@ interface IDeviceInfoProps {
     device: IDevice
 }
 
-const {Text} = Typography
 
 const DeviceInfoCard: React.FC<IDeviceInfoProps> = ({device}) => {
     const history = useHistory()

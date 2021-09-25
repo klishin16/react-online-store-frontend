@@ -3,7 +3,6 @@ import {Layout, Table, Tag} from "antd";
 import AdminViewHeader, {IBreadcrumbRoute} from "../AdminViewHeader";
 import {Content} from "antd/es/layout/layout";
 import {IRole} from "../../../models/IRole";
-import {generateTableConfig} from "../devices/AdminDevicesView";
 import {Link, Route, useRouteMatch} from "react-router-dom";
 import AdminUserDetailView from "./AdminUserDetailView";
 import {IAdminViewProps} from "../types";
@@ -11,6 +10,7 @@ import useExtendedRequest from "../../../hooks/useExtendedRequest";
 import {userTypedSelector} from "../../../hooks/userTypedSelector";
 import {UserService} from "../../../API/UserService";
 import {IUser} from "../../../models/IUser";
+import {generateTableConfig} from "../../../functions/TablePropsBuilder";
 
 
 interface IAdminUsersViewProps extends IAdminViewProps {}

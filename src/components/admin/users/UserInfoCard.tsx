@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Checkbox, Divider, Form, Input, Layout, Row, Select, Typography,} from "antd";
+import {Card, Checkbox, Divider, Form, Input, Layout, Row,} from "antd";
 import {IUserFull} from "../../../models/IUser";
 import useExtendedRequest from "../../../hooks/useExtendedRequest";
-import CategoryService from "../../../API/CategoryService";
 import {UserService} from "../../../API/UserService";
 import {userTypedSelector} from "../../../hooks/userTypedSelector";
 import {useHistory} from "react-router-dom";
@@ -12,8 +11,6 @@ interface IUserInfoProps {
     user: IUserFull
 }
 
-const {Text} = Typography
-const {Option} = Select;
 
 const UserInfoCard: React.FC<IUserInfoProps> = ({user}) => {
     const history = useHistory()
@@ -29,7 +26,7 @@ const UserInfoCard: React.FC<IUserInfoProps> = ({user}) => {
         if (removeResponse && !removeError) {
             history.goBack()
         }
-    }, [removeResponse]);
+    }, [removeResponse, removeError, history]);
 
 
     return (

@@ -1,4 +1,3 @@
-import {IUser} from "../../../models/IUser";
 import {IDevice} from "../../../models/IDevice";
 import {ICategory} from "../../../models/ICategory";
 

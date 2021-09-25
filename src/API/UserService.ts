@@ -3,7 +3,6 @@ import {RequestBuilder} from "../functions/RequestBuilder";
 import {BASE_BACKEND_URL} from "../config/constants";
 import {HttpMethods} from "../hooks/useApi";
 import {IUser} from "../models/IUser";
-import {ICategory} from "../models/ICategory";
 
 export class UserService {
     static async getUser(userId: number, token: string): Promise<AxiosResponse<IUser>> {

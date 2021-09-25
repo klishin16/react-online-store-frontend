@@ -3,9 +3,7 @@ import {IAdminViewProps} from "../types";
 import AdminViewHeader, {IBreadcrumbRoute} from "../AdminViewHeader";
 import {Button, Card, Layout, Row, Table, Typography} from "antd";
 import {Content} from "antd/es/layout/layout";
-import {generateTableConfig} from "../devices/AdminDevicesView";
 import {ICategory} from "../../../models/ICategory";
-import {useGetApi} from "../../../hooks/useApi";
 import {Link, Route, useHistory, useRouteMatch} from "react-router-dom";
 import {RedoOutlined} from '@ant-design/icons';
 import AdminCategoryDetailView from "./AdminCategoryDetailView";
@@ -15,11 +13,12 @@ import useModalForm from "../../../hooks/useModalForm";
 import useExtendedRequest from "../../../hooks/useExtendedRequest";
 import CategoryService from "../../../API/CategoryService";
 import {userTypedSelector} from "../../../hooks/userTypedSelector";
+import {generateTableConfig} from "../../../functions/TablePropsBuilder";
 
 
 interface IAdminCategoriesViewProps extends IAdminViewProps { }
 
-const AdminCategoriesView: React.FC<IAdminViewProps> = ({breadcrumbPath}) => {
+const AdminCategoriesView: React.FC<IAdminCategoriesViewProps> = ({breadcrumbPath}) => {
     const [categories, loading, error, requestWrapper] = useExtendedRequest<undefined, ICategory[]>()
     const {path, url} = useRouteMatch()
     const history = useHistory()

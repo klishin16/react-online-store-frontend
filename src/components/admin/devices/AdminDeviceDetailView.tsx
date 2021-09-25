@@ -5,7 +5,6 @@ import {useGetApi} from "../../../hooks/useApi";
 import {useHistory, useParams} from "react-router-dom";
 import {IDevice} from "../../../models/IDevice";
 import {IAdminViewProps} from "../types";
-import CategoryInfoCard from "../categories/CategoryInfoCard";
 import DeviceInfoCard from "./DeviceInfoCard";
 
 interface IAdminDeviceDetailViewProps extends IAdminViewProps { }
@@ -30,7 +29,6 @@ const AdminDeviceDetailView:React.FC<IAdminDeviceDetailViewProps> = ({breadcrumb
             <Spin spinning={loading}>
                 {device && <DeviceInfoCard device={device} />}
             </Spin>
-            {/*DEVICE DETAIL {JSON.stringify(device)}*/}
         </Layout>
     );
 };

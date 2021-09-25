@@ -1,45 +1,25 @@
-import React from 'react';
-import {Button, Card, Layout, Row, Table} from "antd";
+import React, {useEffect} from 'react';
+import {Button, Card, Layout, message, Row, Table} from "antd";
 import AdminViewHeader, {IBreadcrumbRoute} from "../AdminViewHeader";
 import {Content} from "antd/es/layout/layout";
 import {IAdminViewProps} from "../types";
-import {useGetApi} from "../../../hooks/useApi";
 import {Link, Route, useRouteMatch} from "react-router-dom";
 import {RedoOutlined} from "@ant-design/icons";
 import {AppColors} from "../../../styles/colors";
 import useModalForm from "../../../hooks/useModalForm";
-import {IBrand} from "../../../models/IBrand";
 import BrandCreationForm, {BrandCreationValues} from "./BrandCreationForm";
 import AdminBrandDetailView from "./AdminBrandsDetailView";
+import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import {BrandService} from "../../../API/BrandService";
+import {IBrand} from "../../../models/IBrand";
+import {generateTableConfig} from "../../../functions/TablePropsBuilder";
 
 
-interface IAdminBrandsViewProps extends IAdminViewProps {
-}
+interface IAdminBrandsViewProps extends IAdminViewProps { }
 
-export type TableColumnProps = {
-    title: string,
-    dataIndex: string,
-    key: string,
-    render?: any
-}
-export type generateTableColumnProps = {
-    title: string,
-    render?: any
-}
-
-export function generateTableConfig(columnProps: generateTableColumnProps[]): TableColumnProps[] {
-    return columnProps.map((columnTitle: generateTableColumnProps) => {
-        return {
-            title: columnTitle.title.length >= 2 ? columnTitle.title[0].toUpperCase() + columnTitle.title.slice(1) : columnTitle.title,
-            dataIndex: columnTitle.title,
-            key: columnTitle.title,
-            render: columnTitle.render
-        }
-    })
-}
 
 const AdminBrandsView: React.FC<IAdminBrandsViewProps> = ({breadcrumbPath}) => {
-    const [brands, loading, error, refreshBrands] = useGetApi<IBrand[]>('/brands', true,)
+    const [brands, loading, error, requestWrapper] = useExtendedRequest<undefined, IBrand[]>()
     const {path, url} = useRouteMatch()
 
     const {showModal, ...deviceCreationFormProps} = useModalForm<BrandCreationValues>("Create new brand", '/brands')
@@ -64,6 +44,18 @@ const AdminBrandsView: React.FC<IAdminBrandsViewProps> = ({breadcrumbPath}) => {
             breadcrumbName: 'Brands'
         }
     ]
+
+    useEffect(() => {
+        if (error) message.error(error)
+    }, [error])
+
+    function refreshBrands() {
+        requestWrapper(() => BrandService.getAllBrands(), () => message.success('Loaded!'))
+    }
+
+    useEffect(() => {
+        refreshBrands()
+    }, [])
 
 
     return (

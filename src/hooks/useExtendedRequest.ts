@@ -1,7 +1,7 @@
 import {AxiosResponse} from "axios";
 import {useState} from "react";
 
-export default function <RequestData, ResponseData> (): [ResponseData | undefined, boolean, string | null, (request: () => Promise<AxiosResponse<ResponseData>>, successCallback?: Function) => void] {
+export default <RequestData, ResponseData>(): [ResponseData | undefined, boolean, string | null, (request: () => Promise<AxiosResponse<ResponseData>>, successCallback?: Function) => void] => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<ResponseData | undefined>(undefined)
     const [error, setError] = useState("")

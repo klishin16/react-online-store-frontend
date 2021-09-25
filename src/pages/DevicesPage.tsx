@@ -1,9 +1,6 @@
 import React, {useEffect} from 'react';
 import {Button, Card, Layout, Row, Spin} from "antd";
-import {useGetApi} from "../hooks/useApi";
-import {IDevice} from "../models/IDevice";
 import DeviceCard from "../components/devices/DeviceCard";
-import {useHistory} from "react-router-dom";
 import styled from "styled-components";
 import {useActions} from "../hooks/useActions";
 import {userTypedSelector} from "../hooks/userTypedSelector";
@@ -36,7 +33,6 @@ const DeviceCardsWrapper = styled.div`
 const DevicesPage = () => {
     const {devices, isLoading, category} = userTypedSelector(state => state.devices)
     const {loadDevices, setCategory} = useActions()
-    const history = useHistory()
 
     useEffect(() => {
         loadDevices()

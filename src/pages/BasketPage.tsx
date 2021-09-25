@@ -2,11 +2,6 @@ import React, {useEffect} from 'react';
 import {Button, Card, Divider, Layout, Row, Spin} from "antd";
 import styled from "styled-components";
 import Title from 'antd/lib/typography/Title';
-import useExtendedRequest from "../hooks/useExtendedRequest";
-import {ICategory} from "../models/ICategory";
-import {IBasket} from "../models/IBasket";
-import CategoryService from "../API/CategoryService";
-import {BasketService} from "../API/BasketService";
 import {userTypedSelector} from "../hooks/userTypedSelector";
 import DevicePurchaseCard from "../components/devices/DevicePurchaseCard";
 import {useActions} from "../hooks/useActions";
@@ -46,8 +41,7 @@ const BasketPage:React.FC<IBasketPageProps> = () => {
 
     useEffect(() => {
         loadBasket(user!, token!)
-
-    }, []) //TODO
+    }, [user, token, loadBasket]) //TODO
 
     useEffect(() => {
         if(basket) setTotalSum(basket.devices.reduce((acc, device) => acc + device.price, 0))

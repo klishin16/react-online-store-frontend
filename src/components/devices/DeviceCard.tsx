@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, Divider, Image, Row, Typography} from "antd";
+import {Button, Image, Row, Typography} from "antd";
 import {IDevice} from "../../models/IDevice";
 import {BASE_BACKEND_URL} from "../../config/constants";
 import {AppColors} from "../../styles/colors";
@@ -14,7 +14,7 @@ interface IDeviceCardProps {
 
 const DeviceCardContainer = styled.div`
   padding: 12px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 20px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 20px 0;
   //min-width: 90px;
   width: 100%;
   height: 100%;
@@ -23,7 +23,7 @@ const DeviceCardContainer = styled.div`
   align-items: center;
   justify-content: stretch;
 `
-const {Text, Title} = Typography
+const {Text} = Typography
 
 const DeviceCard: React.FC<IDeviceCardProps> = ({device}) => {
     const {user, token} = userTypedSelector(state => state.auth)

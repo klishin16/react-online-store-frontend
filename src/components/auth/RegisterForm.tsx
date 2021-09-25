@@ -5,7 +5,7 @@ import useExtendedRequest from "../../hooks/useExtendedRequest";
 import {UserService} from "../../API/UserService";
 import {useActions} from "../../hooks/useActions";
 import {RouteNames} from "../../routes/routerPaths";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 interface RegisterFormData {
     email: string;
@@ -14,7 +14,7 @@ interface RegisterFormData {
 
 const RegisterForm = () => {
     const {login} = useActions()
-    const [data, loading, registerError, registerRequestWrapper] = useExtendedRequest()
+    const [_, loading, registerError, registerRequestWrapper] = useExtendedRequest()
 
     const submit = (registerDTO: RegisterFormData) => {
         registerRequestWrapper(() => UserService.createUser(registerDTO.email, registerDTO.password), () => {

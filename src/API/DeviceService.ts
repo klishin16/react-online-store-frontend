@@ -2,10 +2,8 @@ import axios, {AxiosResponse} from "axios";
 import {BASE_BACKEND_URL} from "../config/constants";
 import {IDevice} from "../models/IDevice";
 import {ParamsBuilder} from "../functions/ParamsBuilder";
-import {ICategory} from "../models/ICategory";
 import {RequestBuilder} from "../functions/RequestBuilder";
 import {HttpMethods} from "../hooks/useApi";
-import {IBrand} from "../models/IBrand";
 
 export class DeviceService {
     static async getAllDevices(searchQuery?: string, categoryId?: number, minPrice?: number, maxPrice?: number) {

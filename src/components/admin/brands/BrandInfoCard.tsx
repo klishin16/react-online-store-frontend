@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Divider, Form, Input, Layout, message, Row, Typography} from "antd";
+import {Button, Card, Divider, Form, Input, Layout, message, Row} from "antd";
 import {IBrand} from "../../../models/IBrand";
 import ButtonWithConfirm from "../../ButtonWithConfirm";
 import {useHistory} from "react-router-dom";
@@ -13,7 +13,6 @@ interface IBrandInfoProps {
     brand: IBrand
 }
 
-const {Text} = Typography
 
 const BrandInfoCard: React.FC<IBrandInfoProps> = ({brand}) => {
     const history = useHistory()
@@ -32,6 +31,10 @@ const BrandInfoCard: React.FC<IBrandInfoProps> = ({brand}) => {
     function updateBrand(updateObj: Partial<IBrand>) {
         requestWrapper(() => BrandService.updateBrand(brand.id!, updateObj, token!), () => message.success("Updated!"))
     }
+
+    useEffect(() => {
+        if (updateError) message.error(updateError)
+    }, [updateError])
 
     useEffect(() => {
         if (removeResponse && !removeError) {

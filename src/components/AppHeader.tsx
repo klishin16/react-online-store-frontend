@@ -1,5 +1,5 @@
 import React from 'react';
-import {Badge, Button, Card, Menu} from "antd";
+import {Badge, Button, Card} from "antd";
 import {RouteNames} from "../routes/routerPaths";
 import styled from "styled-components";
 import {Link, useHistory} from "react-router-dom";
@@ -9,13 +9,13 @@ import Title from "antd/es/typography/Title";
 import {useActions} from "../hooks/useActions";
 
 
-const AppLogo = styled.div`
-      float: left;
-      width: 120px;
-      height: 31px;
-      margin: 16px 24px 16px 0;
-      background: rgba(255, 255, 255, 0.2);
-    `
+// const AppLogo = styled.div`
+//       float: left;
+//       width: 120px;
+//       height: 31px;
+//       margin: 16px 24px 16px 0;
+//       background: rgba(255, 255, 255, 0.2);
+//     `
 
 const HeaderWrapper = styled.div`
       display: flex;

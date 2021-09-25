@@ -87,7 +87,7 @@ const DeviceCreationForm:React.FC<IDeviceCreateFormProps> = ({modalTitle, confir
                 </Form.Item>
 
                 <Form.Item name="image" label="Device logo" valuePropName="fileList" getValueFromEvent={uploadProps.normFile} >
-                    {/*// extra="longgggggggggggggggggggggggggggggggggg"*/}
+                    {/*// extra="long"*/}
                     <Upload name="image" listType="picture" beforeUpload={uploadProps.beforeUpload} maxCount={1}>
                         <Button icon={<UploadOutlined />}>Click to upload</Button>
                     </Upload>

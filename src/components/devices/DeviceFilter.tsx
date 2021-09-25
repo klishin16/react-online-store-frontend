@@ -6,12 +6,12 @@ import {userTypedSelector} from "../../hooks/userTypedSelector";
 
 
 const DeviceFilterContainer = styled(Card)`
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 20px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 20px 0;
   text-align: center;
   height: max-content;
 `
 
-const {Text, Title} = Typography
+const {Title} = Typography
 
 const minPriceRange = 0;
 const maxPriceRange = 10000;

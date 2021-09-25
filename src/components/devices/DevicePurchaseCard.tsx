@@ -1,7 +1,7 @@
 import React from 'react';
 import {IDevice} from "../../models/IDevice";
 import styled from "styled-components";
-import {Button, Card, Image} from "antd";
+import {Button, Image} from "antd";
 import {BASE_BACKEND_URL} from "../../config/constants";
 import {useActions} from "../../hooks/useActions";
 import {userTypedSelector} from "../../hooks/userTypedSelector";

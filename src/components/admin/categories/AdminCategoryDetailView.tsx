@@ -1,5 +1,4 @@
 import React, {useEffect} from 'react';
-import {useGetApi} from "../../../hooks/useApi";
 import {useHistory, useParams} from "react-router-dom";
 import {Layout, message, Spin} from "antd";
 

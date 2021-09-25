@@ -1,5 +1,5 @@
-import React from 'react';
-import {Layout, Spin} from "antd";
+import React, {useEffect} from 'react';
+import {Layout, message, Spin} from "antd";
 import AdminViewHeader from "../AdminViewHeader";
 import {useGetApi} from "../../../hooks/useApi";
 import {useHistory, useParams} from "react-router-dom";
@@ -13,6 +13,10 @@ const AdminBrandDetailView:React.FC<IAdminBrandDetailViewProps> = ({breadcrumbPa
     const { brandId } = useParams<{brandId: string}>()
     const [brand, loading, error] = useGetApi<IBrand>(`/brands/${brandId}`, true)
     const history = useHistory()
+
+    useEffect(() => {
+        if (error) message.error(error)
+    }, [error])
 
     return (
         <Layout>

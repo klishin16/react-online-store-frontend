@@ -2,7 +2,6 @@ import LoginPage from "../pages/LoginPage";
 import AdminPage from "../pages/AdminPage";
 import IndexPage from "../pages/IndexPage";
 import {IRoute} from "./types";
-import DevicesPage from "../pages/DevicesPage";
 import RegisterPage from "../pages/RegisterPage";
 
 
