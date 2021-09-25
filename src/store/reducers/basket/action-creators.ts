@@ -34,7 +34,7 @@ export const BasketActionCreators = {
                 dispatch(BasketActionCreators.setError(e.message))
             }
             // @ts-ignore
-            dispatch(AuthActionCreators.setError(e.name))
+            dispatch(BasketActionCreators.setError(e.name))
         } finally {
             dispatch(BasketActionCreators.setIsBasketLoading(false))
         }

@@ -6,6 +6,7 @@ import {Link, useHistory} from "react-router-dom";
 import {userTypedSelector} from "../hooks/userTypedSelector";
 import {LoginOutlined} from '@ant-design/icons';
 import Title from "antd/es/typography/Title";
+import {useActions} from "../hooks/useActions";
 
 
 const AppLogo = styled.div`
@@ -27,6 +28,7 @@ const HeaderLinksWrapper = styled.div`
     `
 
 const AppHeader = () => {
+    const {logout} = useActions()
 
     const router = useHistory()
 
@@ -39,6 +41,8 @@ const AppHeader = () => {
             <Badge count={basket ? basket.devices.length : 0}>
                 <Button type={"link"} onClick={() => router.push(RouteNames.BASKET)} key="6">Basket</Button>
             </Badge>
+            {user && user.roles.map(role => role.value).includes("ADMIN") && <Button type={"link"} onClick={() => router.push(RouteNames.ADMIN)} key="6">Admin</Button>}
+            <Button type={"link"} onClick={() => logout()} key="7">Logout</Button>
 
         </>
         :
@@ -56,7 +60,7 @@ const AppHeader = () => {
                         <Link to={RouteNames.INDEX}><Title level={3} style={{marginBottom: 0}}>REACT SHOP</Title></Link>
                         <Link to={RouteNames.DEVICES}>Devices</Link>
                     </div>
-                    <div style={{width: '200px'}} >
+                    <div style={{display: 'flex'}} >
                         {authLinks}
                     </div>
                 </HeaderLinksWrapper>

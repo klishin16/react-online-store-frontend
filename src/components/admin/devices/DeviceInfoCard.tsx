@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Col, Divider, Form, Input, Layout, Row, Typography, Image, Select, message} from "antd";
+import {Button, Card, Col, Divider, Form, Image, Input, Layout, message, Row, Select, Typography} from "antd";
 import ButtonWithConfirm from "../../ButtonWithConfirm";
 import {useHistory} from "react-router-dom";
 import {IDevice} from "../../../models/IDevice";
@@ -10,6 +10,7 @@ import {ICategory} from "../../../models/ICategory";
 import {IBrand} from "../../../models/IBrand";
 import {DeviceService} from "../../../API/DeviceService";
 import {userTypedSelector} from "../../../hooks/userTypedSelector";
+import {useEditForm} from "../../../hooks/useEditForm";
 
 
 interface IDeviceInfoProps {
@@ -34,7 +35,7 @@ const DeviceInfoCard: React.FC<IDeviceInfoProps> = ({device}) => {
         device.brand
     )
 
-    const categorySelectParams = useSelect<ICategory>(
+    const categoriesSelectParams = useSelect<ICategory>(
         '/categories',
         dataItem => {
             return {
@@ -45,11 +46,25 @@ const DeviceInfoCard: React.FC<IDeviceInfoProps> = ({device}) => {
         device.categories
     )
 
+    const {data, setData, edited} = useEditForm(device);
+
+    const [updateResponse, updateLoading, updateError, updateRequestWrapper] = useExtendedRequest<undefined, any>()
     const [removeResponse, removeLoading, error, removeRequestWrapper] = useExtendedRequest()
 
-    function removeCategory() {
+    function removeDevice() {
         removeRequestWrapper(() => DeviceService.deleteDevice(device.id!, token!), () => message.success('Removed!'))
     }
+
+    function updateDevice() {
+        const updateObj = editDeviceForm.getFieldsValue()
+        console.log('Device update:', updateObj)
+        updateRequestWrapper(
+            () => DeviceService.updateDevice(device.id!, updateObj, token!), () => message.success("Updated!"))
+    }
+
+    useEffect(() => {
+        if (error) message.error(error)
+    }, [error])
 
     useEffect(() => {
         if (removeResponse && !error) {
@@ -57,10 +72,17 @@ const DeviceInfoCard: React.FC<IDeviceInfoProps> = ({device}) => {
         }
     }, [removeResponse]);
 
+    const [editDeviceForm] = Form.useForm();
+
 
     return (
         <Layout>
+            {updateResponse && updateResponse.toString()}
             <Card style={{margin: '14px 16px'}}>
+                <Form
+                    form={editDeviceForm}
+                    initialValues={data}
+                >
                 <Row justify={"space-between"}>
                     <Col span={8}>
                         <Image
@@ -69,32 +91,30 @@ const DeviceInfoCard: React.FC<IDeviceInfoProps> = ({device}) => {
                         />
                     </Col>
                     <Col span={16}>
-                        <Form.Item label="DeviceID: ">
-                            <Input disabled value={device.id}/>
+                        <Form.Item name={'id'} label="DeviceID: ">
+                            <Input disabled />
                         </Form.Item>
                         <Divider/>
-                        <Form.Item label="Device name: ">
-                            <Input value={device.name}/>
+                        <Form.Item name={'name'} label="Device name: ">
+                            <Input />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Divider/>
                 <Row justify={"space-between"}>
-                    <Form.Item label="Price: ">
-                        <Input value={device.price}/>
+                    <Form.Item name={'price'} label="Price: ">
+                        <Input />
                     </Form.Item>
-                    <Form.Item label="Sale: ">
-                        <Input value={device.sale ? device.sale : 0}/>
+                    <Form.Item name={'sale'} label="Sale: ">
+                        <Input />
                     </Form.Item>
                 </Row>
 
                 <Divider/>
 
                 <Row justify={"space-between"}>
-                    <Form.Item label="Brand: ">
-                        {/*{category.parentCategoryId}*/}
+                    <Form.Item name={'brandId'} label="Brand: ">
                         <Select
-
                             showSearch
                             style={{width: 200}}
                             placeholder="Select a brand"
@@ -102,25 +122,30 @@ const DeviceInfoCard: React.FC<IDeviceInfoProps> = ({device}) => {
                         />
                     </Form.Item>
 
-                    <Form.Item label="Category: ">
-                        {/*{category.parentCategoryId}*/}
+                    <Form.Item name={'categoriesId'} label="Category: ">
                         <Select
                             mode={"tags"}
                             showSearch
                             style={{width: 200}}
                             placeholder="Select a category"
-                            {...categorySelectParams}
+                            {...categoriesSelectParams}
                         />
                     </Form.Item>
                 </Row>
+                </Form>
 
                 <Divider/>
 
                 <Row justify={"end"}>
-                    <Button style={{color: "green", borderColor: "green", marginRight: '.7vw'}}>Save</Button>
+                    <Button
+                        style={{color: "green", borderColor: "green", marginRight: '.7vw'}}
+                        disabled={edited}
+                        loading={updateLoading}
+                        onClick={() => updateDevice()}
+                    >Update</Button>
                     <ButtonWithConfirm
                         title={"Удалить"}
-                        onConfirm={removeCategory}
+                        onConfirm={removeDevice}
                         style={{color: "red", borderColor: "red"}}
                         popconfirmTitle={"Удалить? "}
                         loading={removeLoading}

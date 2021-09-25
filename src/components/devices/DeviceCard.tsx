@@ -49,7 +49,7 @@ const DeviceCard: React.FC<IDeviceCardProps> = ({device}) => {
             </div>
             <div style={{display: "flex", justifyContent: 'space-between', alignItems: 'center'}}>
                 <Text style={{fontSize: '1.2rem', fontWeight: "lighter"}}>Бренд: </Text>
-                <Text style={{fontSize: '1.2rem', fontWeight: "lighter"}}>{device.brandId}</Text>
+                <Text style={{fontSize: '1.2rem', fontWeight: "lighter"}}>{device.brand?.name}</Text>
             </div>
             <hr/>
             <Row justify={"space-between"}>

@@ -1,18 +1,27 @@
 import React from 'react';
 import {Button, Form, Input, Row, Typography} from 'antd';
 import {LockOutlined, UserOutlined} from '@ant-design/icons';
-import {LoginDTO} from "../../models/IUser";
-import {userTypedSelector} from "../../hooks/userTypedSelector";
+import useExtendedRequest from "../../hooks/useExtendedRequest";
+import {UserService} from "../../API/UserService";
+import {useActions} from "../../hooks/useActions";
+import {RouteNames} from "../../routes/routerPaths";
+import { Link } from 'react-router-dom';
 
+interface RegisterFormData {
+    email: string;
+    password: string;
+}
 
 const RegisterForm = () => {
-    // const {login} = useActions()
+    const {login} = useActions()
+    const [data, loading, registerError, registerRequestWrapper] = useExtendedRequest()
 
-    const submit = (loginDTO: LoginDTO) => {
-        // login(loginDTO, RouteNames.ADMIN)
+    const submit = (registerDTO: RegisterFormData) => {
+        registerRequestWrapper(() => UserService.createUser(registerDTO.email, registerDTO.password), () => {
+            login(registerDTO, true, RouteNames.INDEX)
+        })
+
     };
-
-    const { isLoading, error } = userTypedSelector(state => state.auth)
 
     return (
         <Form
@@ -21,7 +30,7 @@ const RegisterForm = () => {
             initialValues={{ remember: true }}
             onFinish={submit}
         >
-            {error && <Row><Typography.Text style={{color: 'red'}}>{error}</Typography.Text></Row>}
+            {registerError && <Row><Typography.Text style={{color: 'red'}}>{registerError.toString()}</Typography.Text></Row>}
             <Form.Item
                 name="email"
                 rules={[{ required: true, message: 'Please input your Email!' }]}
@@ -40,10 +49,10 @@ const RegisterForm = () => {
             </Form.Item>
 
             <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button" loading={isLoading}>
-                    Log in
+                <Button type="primary" htmlType="submit" className="login-form-button" loading={loading}>
+                    Register
                 </Button>
-                Or <a href="">register now!</a>
+                Or <Link to={RouteNames.LOGIN}>login!</Link>
             </Form.Item>
         </Form>
     );

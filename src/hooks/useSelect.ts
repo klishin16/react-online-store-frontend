@@ -38,7 +38,8 @@ export default function<OptionData> (dataUrl: string, dataSerializer: (data: Opt
         options,
         filterOption,
         onDropdownVisibleChange,
-        defaultValue: value ? Array.isArray(value) ? value.map(v => dataSerializer(v).label) : dataSerializer(value).label  : undefined,
+        initialValue: value ? Array.isArray(value) ? value.map(v => dataSerializer(v)) : dataSerializer(value)  : undefined,
+        defaultValue: value ? Array.isArray(value) ? value.map(v => dataSerializer(v).value) : dataSerializer(value).value  : undefined,
         onBlur,
         onChange,
         onSearch

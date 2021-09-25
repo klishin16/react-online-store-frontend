@@ -6,6 +6,7 @@ export interface IUser {
     email: string;
     password: string;
     basket?: IBasket
+    roles: IRole[]
 //    TODO определиться с полями (см ниже)
 }
 

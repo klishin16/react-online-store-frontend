@@ -13,6 +13,7 @@ import {RouteNames} from "../../../routes/routerPaths";
 import {HttpMethods} from "../../../hooks/useApi";
 import {UserService} from "../../../API/UserService";
 import {message} from "antd";
+import {useHistory} from "react-router-dom";
 
 
 const storageName = 'userData'
@@ -51,6 +52,8 @@ export const AuthActionCreators = {
                 }
 
                 if (next) {
+                    const history = useHistory()
+                    history.push(next)
                     //TODO redirect
                 }
             } else {

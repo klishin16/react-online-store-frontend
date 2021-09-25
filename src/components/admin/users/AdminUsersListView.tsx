@@ -1,24 +1,31 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Layout, Table, Tag} from "antd";
 import AdminViewHeader, {IBreadcrumbRoute} from "../AdminViewHeader";
 import {Content} from "antd/es/layout/layout";
 import {IRole} from "../../../models/IRole";
-import {IUser} from "../../../models/IUser";
-import {useGetApi} from "../../../hooks/useApi";
 import {generateTableConfig} from "../devices/AdminDevicesView";
-import {Link, useRouteMatch, Route} from "react-router-dom";
-import StatisticView from "../StatisticView";
-import {AdminViews} from "../../../pages/AdminPage";
+import {Link, Route, useRouteMatch} from "react-router-dom";
 import AdminUserDetailView from "./AdminUserDetailView";
 import {IAdminViewProps} from "../types";
+import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import {userTypedSelector} from "../../../hooks/userTypedSelector";
+import {UserService} from "../../../API/UserService";
+import {IUser} from "../../../models/IUser";
 
 
 interface IAdminUsersViewProps extends IAdminViewProps {}
 
 
 const AdminUsersListView:React.FC<IAdminUsersViewProps> = ({breadcrumbPath}) => {
-    const [users, loading, error] = useGetApi<IUser[]>('/users');
+    const [users, loading, error, requestWrapper] = useExtendedRequest<undefined, IUser[]>();
     const {path, url} = useRouteMatch();
+
+    const {token} = userTypedSelector(state => state.auth)
+
+    useEffect(() => {
+        requestWrapper(() => UserService.getAllUsers(token!))
+    }, []);
+
 
     const columns = generateTableConfig([
         {
@@ -71,7 +78,7 @@ const AdminUsersListView:React.FC<IAdminUsersViewProps> = ({breadcrumbPath}) => 
                     />
 
                     <Content style={{marginTop: '2.3vh', marginLeft: "1.6vw", marginRight: "1.6vw"}}>
-                        <Table loading={loading} columns={columns} dataSource={users!}/>
+                        <Table loading={loading} columns={columns} dataSource={users}/>
                     </Content>
                 </Layout>
             </Route>

@@ -1,6 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Card, Checkbox, Divider, Form, Input, Layout, Row, Select, Typography,} from "antd";
 import {IUserFull} from "../../../models/IUser";
+import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import CategoryService from "../../../API/CategoryService";
+import {UserService} from "../../../API/UserService";
+import {userTypedSelector} from "../../../hooks/userTypedSelector";
+import {useHistory} from "react-router-dom";
+import ButtonWithConfirm from "../../ButtonWithConfirm";
 
 interface IUserInfoProps {
     user: IUserFull
@@ -10,6 +16,20 @@ const {Text} = Typography
 const {Option} = Select;
 
 const UserInfoCard: React.FC<IUserInfoProps> = ({user}) => {
+    const history = useHistory()
+
+    const [removeResponse, removeLoading, removeError, removeRequestWrapper] = useExtendedRequest()
+    const { token } = userTypedSelector(state => state.auth)
+
+    function removeUser() {
+        removeRequestWrapper(() => UserService.deleteUser(user.id!, token!))
+    }
+
+    useEffect(() => {
+        if (removeResponse && !removeError) {
+            history.goBack()
+        }
+    }, [removeResponse]);
 
 
     return (
@@ -20,7 +40,7 @@ const UserInfoCard: React.FC<IUserInfoProps> = ({user}) => {
                         <Input disabled value={user.email}/>
                     </Form.Item>
                     <Form.Item label="Password: ">
-                        <Input value={user.password}/>
+                        <Input disabled value={user.password}/>
                     </Form.Item>
                 </Row>
                 <Divider/>
@@ -29,13 +49,20 @@ const UserInfoCard: React.FC<IUserInfoProps> = ({user}) => {
                         <Checkbox disabled checked={user.banned}/>
                     </Form.Item>
                     <Form.Item label="Ban reason: ">
-                        <Input value={user.banReason ? user.banReason : 'Отсутствует'}/>
+                        <Input disabled value={user.banReason ? user.banReason : 'Отсутствует'}/>
                     </Form.Item>
                 </Row>
                 <Divider/>
                 <Row justify={"end"}>
-                    <Button style={{color: "green", borderColor: "green", marginRight: '.7vw'}}>Save</Button>
-                    <Button style={{color: "red", borderColor: "red"}}>Delete</Button>
+                    <ButtonWithConfirm
+                        title={"Удалить"}
+                        onConfirm={removeUser}
+                        style={{color: "red", borderColor: "red"}}
+                        popconfirmTitle={"Удалить? "}
+                        loading={removeLoading}
+                    >
+                        Delete
+                    </ButtonWithConfirm>
                 </Row>
             </Card>
         </Layout>

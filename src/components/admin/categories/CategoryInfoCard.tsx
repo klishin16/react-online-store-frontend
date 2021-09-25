@@ -1,31 +1,13 @@
 import React, {useEffect} from 'react';
-import {
-    Button,
-    Card,
-    Checkbox,
-    Divider,
-    Dropdown,
-    Form,
-    Input,
-    Layout,
-    Menu,
-    message,
-    Row,
-    Select,
-    Typography
-} from "antd";
+import {Button, Card, Divider, Dropdown, Form, Input, Layout, Menu, message, Row, Select, Typography} from "antd";
 import {ICategory} from "../../../models/ICategory";
 import useSelect from "../../../hooks/useSelect";
 import ButtonWithConfirm from "../../ButtonWithConfirm";
-import {useDELETEApi} from "../../../hooks/useApi";
 import {useHistory} from "react-router-dom";
 import {DownOutlined, UnorderedListOutlined} from '@ant-design/icons';
 import useExtendedRequest from "../../../hooks/useExtendedRequest";
 import CategoryService from "../../../API/CategoryService";
 import {userTypedSelector} from "../../../hooks/userTypedSelector";
-import {IBrand} from "../../../models/IBrand";
-import {BrandService} from "../../../API/BrandService";
-import useInput from "../../../hooks/useInput";
 import {useEditForm} from "../../../hooks/useEditForm";
 
 

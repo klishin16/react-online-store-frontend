@@ -21,6 +21,8 @@ import styled from "styled-components";
 import AdminDevicesView from "../components/admin/devices/AdminDevicesView";
 import AdminCategoriesView from "../components/admin/categories/AdminCategoriesView";
 import AdminBrandsView from "../components/admin/brands/AdminBrandsView";
+import {userTypedSelector} from "../hooks/userTypedSelector";
+import Text from "antd/es/typography/Text";
 
 const {Header, Footer, Sider} = Layout;
 
@@ -101,6 +103,8 @@ const AdminPage: React.FC = (props) => {
     const {logout} = useActions()
     let {path, url} = useRouteMatch();
 
+    const {user} = userTypedSelector(state => state.auth)
+
     const [collapseSide, setCollapseSide] = useState(false)
 
     const onCollapse = (collapsed: boolean) => {
@@ -111,7 +115,7 @@ const AdminPage: React.FC = (props) => {
     return (
         <Layout style={{minHeight: '100vh'}}>
             <Sider collapsible collapsed={collapseSide} onCollapse={onCollapse}>
-                <div className="logo">Admin page</div>
+                <div className="logo" />
                 <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
                     {menuItems.map((menuItem, index) =>
                         <Menu.Item key={index} icon={menuItem.icon}>
@@ -127,7 +131,8 @@ const AdminPage: React.FC = (props) => {
             <Layout className="site-layout">
                 <AdminPageHeader className="site-layout-background">
                     <Row style={{height: '100%'}} justify={"end"} align={"middle"}>
-                        <Button style={{marginRight: '1vw'}} danger ghost={true} onClick={logout}>Logout</Button>
+                        {user && <Text>{user.email}</Text>}
+                        <Button style={{marginLeft: '1vw', marginRight: '1vw'}} danger ghost={true} onClick={logout}>Logout</Button>
                     </Row>
                 </AdminPageHeader>
 
