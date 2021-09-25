@@ -12,7 +12,8 @@ export enum RouteNames {
     ADMIN = '/admin',
     INDEX = '/shop',
     DEVICES = '/shop/devices',
-    BASKET = '/basket'
+    BASKET = '/shop/basket',
+    PROFILE = '/profile'
 }
 
 export const publicRoutes: IRoute[] = [

@@ -33,6 +33,8 @@ export default function <Data>(modalTitle: string, url: string, withFiles = fals
 
         const requestData = withFiles ? formData : data
 
+        console.log('Request data:', requestData)
+
         const rb = new RequestBuilder(url, HttpMethods.POST, requestData, {}).includeToken(token!)
         console.log("onCreate")
         setTimeout(() => {

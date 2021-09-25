@@ -15,7 +15,7 @@ const Container = styled.div`
   width: 100%;
   display: grid;
   gap: 20px;
-  grid-template-columns: 1fr 6fr;
+  grid-template-columns: 190px 1fr;
 `
 
 const DeviceCardsWrapper = styled.div`
@@ -23,27 +23,33 @@ const DeviceCardsWrapper = styled.div`
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 340px);
+  @media(max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media(max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
 `
 
 
 const DevicesPage = () => {
-    const {devices, isLoading, categoryId} = userTypedSelector(state => state.devices)
-    const {loadDevices, setCategoryId} = useActions()
+    const {devices, isLoading, category} = userTypedSelector(state => state.devices)
+    const {loadDevices, setCategory} = useActions()
     const history = useHistory()
 
     useEffect(() => {
         loadDevices()
-    }, [categoryId]) //TODO срочно переделать
+    }, [category]) //TODO срочно переделать
 
     return (
         <Layout style={{marginTop: '3vh', background: '#fff'}}>
             <Spin spinning={isLoading}>
-                {categoryId &&
-                <Card size={"small"}>
+                {category &&
+                <Card size={"small"} style={{marginBottom: '1vh'}}>
                     <Row justify={"space-between"}>
-                        <Title style={{fontWeight: "lighter", marginBottom: '0'}} level={2}>Category: {categoryId}</Title>
-                        <Button onClick={() => setCategoryId(undefined)} danger>Reset</Button>
+                        <Title style={{fontWeight: "lighter", marginBottom: '0'}} level={2}>Выбранная категория: <i>{category.name}</i></Title>
+                        <Button onClick={() => setCategory(undefined)} danger>Reset</Button>
                     </Row>
                 </Card>
                 }

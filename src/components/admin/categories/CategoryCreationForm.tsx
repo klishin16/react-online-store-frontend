@@ -20,16 +20,14 @@ interface ICategoryCreateFormProps {
 
 const CategoryCreationForm:React.FC<ICategoryCreateFormProps> = ({modalTitle, confirmLoading, visible, onCreate, onCancel}) => {
     const [form] = Form.useForm();
-    const selectParams = useSelect<ICategory[]>(
+    const selectParams = useSelect<ICategory>(
         '/categories',
-        data => data.map(category => {
-                return {
-                    label: category.name,
-                    value: category.id!
+        dataItem =>  {
+                    return {
+                        label: dataItem.name,
+                        value: dataItem.id!
                 }
             }
-        ),
-        -1
     )
 
     function onOk() {
@@ -64,7 +62,7 @@ const CategoryCreationForm:React.FC<ICategoryCreateFormProps> = ({modalTitle, co
                 </Form.Item>
                 <Form.Item
                     label="Parent category"
-                    name={"categoryId"}
+                    name={"parentCategoryId"}
                     required tooltip="Select parent category or set null to show in top of categories tree."
                 >
                     <Select

@@ -1,6 +1,6 @@
 import axios from "axios";
 import {BASE_BACKEND_URL} from "../config/constants";
-import {HttpMethods} from "./useApi";
+import {HttpMethods} from "../hooks/useApi";
 
 
 export async function makeRequest<Body, Res>(url: string, method: HttpMethods, body: Body, headers = {}): Promise<Res> {

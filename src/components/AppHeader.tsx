@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, Menu} from "antd";
+import {Badge, Button, Card, Menu} from "antd";
 import {RouteNames} from "../routes/routerPaths";
 import styled from "styled-components";
 import {Link, useHistory} from "react-router-dom";
@@ -30,12 +30,16 @@ const AppHeader = () => {
 
     const router = useHistory()
 
-    const { isAuth } = userTypedSelector(state => state.auth)
+    const { isAuth, user } = userTypedSelector(state => state.auth)
+    const { basket } = userTypedSelector(state => state.basket)
 
     const authLinks = isAuth ?
         <>
-            <Button type={"link"} onClick={() => router.push(RouteNames.ADMIN)} key="5">Admin</Button>
-            <Button type={"link"} onClick={() => router.push(RouteNames.BASKET)} key="6">Basket</Button>
+            <Button type={"link"} onClick={() => router.push(RouteNames.PROFILE)} key="5">{user ? user.email : 'Loading...'}</Button>
+            <Badge count={basket ? basket.devices.length : 0}>
+                <Button type={"link"} onClick={() => router.push(RouteNames.BASKET)} key="6">Basket</Button>
+            </Badge>
+
         </>
         :
         <>

@@ -29,26 +29,24 @@ interface IDeviceCreateFormProps {
 
 const DeviceCreationForm:React.FC<IDeviceCreateFormProps> = ({modalTitle, confirmLoading, visible, onCreate, onCancel, errors}) => {
     const [form] = Form.useForm();
-    const selectParams = useSelect<ICategory[]>(
+    const selectParams = useSelect<ICategory>(
         '/categories',
-        data => data.map(category => {
+        data => {
                 return {
-                    label: category.name,
-                    value: category.id!
+                    label: data.name,
+                    value: data.id!
                 }
             }
-        ),
+        )
 
-    )
-    const brandSelectParams = useSelect<IBrand[]>(
+    const brandSelectParams = useSelect<IBrand>(
         '/brands',
-        data => data.map(brand => {
+        data => {
                 return {
-                    label: brand.name,
-                    value: brand.id!
+                    label: data.name,
+                    value: data.id!
                 }
             }
-        ),
     )
 
     function onOk() {

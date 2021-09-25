@@ -11,10 +11,10 @@ export function buildCategoriesTree(categories: ICategory[]): CategoriesTree {
     const highCategories = new Array<ICategory>();
     const leafCategories = new Map<number, ICategory[]>();
     categories.map(category => {
-        if (!category.categoryId) {
+        if (!category.parentCategoryId) {
             highCategories.push(category)
         } else {
-            leafCategories.has(category.categoryId) ? leafCategories.get(category.categoryId)!.push(category) :  leafCategories.set(category.categoryId, [category])
+            leafCategories.has(category.parentCategoryId!) ? leafCategories.get(category.parentCategoryId!)!.push(category) :  leafCategories.set(category.parentCategoryId!, [category])
         }
     })
 

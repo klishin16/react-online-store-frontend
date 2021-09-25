@@ -2,8 +2,11 @@ import {IRole} from "./IRole";
 import {IBasket} from "./IBasket";
 
 export interface IUser {
+    id?: number
     email: string;
-    password: string
+    password: string;
+    basket?: IBasket
+//    TODO определиться с полями (см ниже)
 }
 
 export interface LoginDTO {
@@ -13,6 +16,7 @@ export interface LoginDTO {
 
 export interface LoginResponseDTO {
     token: string;
+    user: IUser;
 }
 
 export interface IUserFull {

@@ -11,6 +11,7 @@ import {Route, useRouteMatch} from "react-router-dom";
 import {RouteNames} from "../routes/routerPaths";
 import DevicesPage from "./DevicesPage";
 import HeaderSearch from "../components/HeaderSearch";
+import BasketPage from "./BasketPage";
 
 
 const ContentWrapper = styled(Card)`
@@ -104,6 +105,10 @@ const IndexPage = () => {
 
                     <Route exact path={RouteNames.DEVICES}>
                         <DevicesPage/>
+                    </Route>
+
+                    <Route exact path={RouteNames.BASKET}>
+                        <BasketPage />
                     </Route>
                 </ContentWrapper>
             </Content>

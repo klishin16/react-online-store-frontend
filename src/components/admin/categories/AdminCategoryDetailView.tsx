@@ -7,6 +7,9 @@ import AdminViewHeader from "../AdminViewHeader";
 import {ICategory} from "../../../models/ICategory";
 import CategoryInfoCard from "./CategoryInfoCard";
 import {IAdminViewProps} from "../types";
+import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import CategoryService from "../../../API/CategoryService";
+import {userTypedSelector} from "../../../hooks/userTypedSelector";
 
 
 interface IAdminCategoryDetailViewProps extends IAdminViewProps { }
@@ -14,14 +17,16 @@ interface IAdminCategoryDetailViewProps extends IAdminViewProps { }
 
 const AdminCategoryDetailView:React.FC<IAdminCategoryDetailViewProps> = ({breadcrumbPath}) => {
     const { categoryId } = useParams<{categoryId: string}>()
-    const [category, loading, error, execute] = useGetApi<ICategory>(`/categories/${categoryId}`, true, false)
+    const [category, loading, error, requestWrapper] = useExtendedRequest<undefined, ICategory>()
+    const { token } = userTypedSelector(state => state.auth)
     const history = useHistory()
 
-    useEffect(() => execute(), [categoryId])
+    useEffect(() => requestWrapper(() => CategoryService.getCategory(Number(categoryId), token!)),
+        [categoryId])
 
     return (
         <Layout>
-            {error.length > 0 && message.error(error.toString())}
+            {error && message.error(error.toString())}
             <AdminViewHeader
                 title={"Category"}
                 subTitle={"Category detail info"}

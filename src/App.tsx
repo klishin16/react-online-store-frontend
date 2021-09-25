@@ -9,6 +9,7 @@ import './styles/App.css'
 import AppRouter from './components/AppRouter';
 import {userTypedSelector} from "./hooks/userTypedSelector";
 import {Themes} from "./store/reducers/userSettings/types";
+import {useActions} from "./hooks/useActions";
 
 
 function App() {
@@ -30,6 +31,11 @@ function App() {
             // return import((`./styles/themes/theme.dark.less`));
         }
     }
+
+    const {authenticate} = useActions()
+    useEffect(() => {
+        authenticate()
+    }, [])
 
     return (
         <div>

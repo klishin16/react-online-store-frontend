@@ -1,41 +1,66 @@
-import {AppDispatch, RootState, store} from "../../store";
+import {AppDispatch, RootState} from "../../store";
 import {
     DevicesActionEnum,
     SetCategoryAction,
     SetDevicesAction,
     SetErrorAction,
-    SetIsLoadingAction,
+    SetIsLoadingAction, SetMaxPriceAction,
+    SetMinPriceAction,
     SetSearchQueryAction
 } from "./types";
 import {IDevice} from "../../../models/IDevice";
 import {DeviceService} from "../../../API/DeviceService";
+import {ICategory} from "../../../models/ICategory";
+import {dispatch} from "jest-circus/build/state";
 
+const setIsDevicesLoading = (isLoading: boolean): SetIsLoadingAction => ({
+    type: DevicesActionEnum.SET_IS_LOADING,
+    payload: isLoading
+})
+const setError = (error: string): SetErrorAction => ({type: DevicesActionEnum.SET_ERROR, payload: error})
+const setDevices = (devices: IDevice[]): SetDevicesAction => ({type: DevicesActionEnum.SET_DEVICES, payload: devices})
+const setQuery = (query: string | undefined): SetSearchQueryAction => ({
+    type: DevicesActionEnum.SET_SEARCH_QUERY,
+    payload: query
+})
+const setCategory = (category: ICategory | undefined): SetCategoryAction => ({
+    type: DevicesActionEnum.SET_CATEGORY,
+    payload: category
+})
+const setMinPrice = (minPrice: number | undefined): SetMinPriceAction => ({
+    type: DevicesActionEnum.SET_MIN_PRICE,
+    payload: minPrice
+})
+const setMaxPrice = (maxPrice: number | undefined): SetMaxPriceAction => ({
+    type: DevicesActionEnum.SET_MAX_PRICE,
+    payload: maxPrice
+})
+const setPriceRange = (minPrice?: number, maxPrice?: number) => async (dispatch: AppDispatch) => {
+    dispatch(setMinPrice(minPrice))
+    dispatch(setMaxPrice(maxPrice))
+}
+
+const loadDevices = () => async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+        dispatch(setError(""))
+        dispatch(setIsDevicesLoading(true))
+        const devicesResponse = await DeviceService.getAllDevices(getState().devices.q, getState().devices.category?.id, getState().devices.minPrice, getState().devices.minPrice)
+        dispatch(setDevices(devicesResponse.data))
+    } catch (e: unknown) {
+        if (e instanceof Error) {
+            dispatch(setError(e.message))
+        }
+        // @ts-ignore
+        dispatch(setError(e.toString()))
+    } finally {
+        dispatch(setIsDevicesLoading(false))
+    }
+}
 
 export const DeviceActionCreators = {
-    setIsDevicesLoading: (isLoading: boolean): SetIsLoadingAction => ({type: DevicesActionEnum.SET_IS_LOADING, payload: isLoading}),
-    setError: (error: string): SetErrorAction => ({type: DevicesActionEnum.SET_ERROR, payload: error}),
-    setDevices: (devices: IDevice[]): SetDevicesAction => ({type: DevicesActionEnum.SET_DEVICES, payload: devices}),
-    setQuery: (query: string | undefined): SetSearchQueryAction => ({type: DevicesActionEnum.SET_SEARCH_QUERY, payload: query}),
-    setCategoryId: (categoryId: number | undefined): SetCategoryAction => ({type: DevicesActionEnum.SET_CATEGORY, payload: categoryId}),
-
-    // setSearchQuery: (query: string | undefined) => async (dispatch: AppDispatch) => {
-    //     dispatch(DeviceActionCreators.setQuery(query))
-    // },
-
-    loadDevices: () => async (dispatch: AppDispatch, getState: () => RootState) => {
-        try {
-            dispatch(DeviceActionCreators.setError(""))
-            dispatch(DeviceActionCreators.setIsDevicesLoading(true))
-            const devicesResponse = await DeviceService.getAllDevices(getState().devices.q, getState().devices.categoryId)
-            dispatch(DeviceActionCreators.setDevices(devicesResponse.data))
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                dispatch(DeviceActionCreators.setError(e.message))
-            }
-            // @ts-ignore
-            dispatch(AuthActionCreators.setError(e.name))
-        } finally {
-            dispatch(DeviceActionCreators.setIsDevicesLoading(false))
-        }
-    }
+    setDevices,
+    loadDevices,
+    setCategory,
+    setQuery,
+    setPriceRange,
 }

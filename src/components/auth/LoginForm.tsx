@@ -7,11 +7,22 @@ import {useActions} from "../../hooks/useActions";
 import {RouteNames} from "../../routes/routerPaths";
 
 
+interface LoginFormData {
+    email: string;
+    password: string;
+    remember: boolean
+}
+
 const LoginForm = () => {
     const {login} = useActions()
 
-    const submit = (loginDTO: LoginDTO) => {
-        login(loginDTO, RouteNames.ADMIN)
+    const submit = (data: LoginFormData) => {
+        console.log(data)
+        const loginDto: LoginDTO = {
+            email: data.email,
+            password: data.password
+        }
+        login(loginDto, data.remember, RouteNames.ADMIN)
     };
 
     const { isLoading, error } = userTypedSelector(state => state.auth)

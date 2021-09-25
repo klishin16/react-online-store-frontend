@@ -1,11 +1,32 @@
 import React, {useEffect} from 'react';
-import {Button, Card, Divider, Dropdown, Form, Layout, Menu, Row, Select, Typography} from "antd";
+import {
+    Button,
+    Card,
+    Checkbox,
+    Divider,
+    Dropdown,
+    Form,
+    Input,
+    Layout,
+    Menu,
+    message,
+    Row,
+    Select,
+    Typography
+} from "antd";
 import {ICategory} from "../../../models/ICategory";
 import useSelect from "../../../hooks/useSelect";
 import ButtonWithConfirm from "../../ButtonWithConfirm";
 import {useDELETEApi} from "../../../hooks/useApi";
 import {useHistory} from "react-router-dom";
 import {DownOutlined, UnorderedListOutlined} from '@ant-design/icons';
+import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import CategoryService from "../../../API/CategoryService";
+import {userTypedSelector} from "../../../hooks/userTypedSelector";
+import {IBrand} from "../../../models/IBrand";
+import {BrandService} from "../../../API/BrandService";
+import useInput from "../../../hooks/useInput";
+import {useEditForm} from "../../../hooks/useEditForm";
 
 
 interface ICategoryInfoProps {
@@ -16,30 +37,44 @@ const {Text} = Typography
 
 const CategoryInfoCard: React.FC<ICategoryInfoProps> = ({category}) => {
     const history = useHistory()
-    const selectParams = useSelect<ICategory[]>(
+
+    const { token } = userTypedSelector(state => state.auth)
+
+    const selectParams = useSelect<ICategory>(
         '/categories',
-        data => data.map(category => {
-                return {
-                    label: category.name,
-                    value: category.id!
-                }
+        dataItem => {
+            return {
+                label: dataItem.name,
+                value: dataItem.id!
             }
-        ),
-        // category.categoryId != null ? {value: category.categoryId, label: category.categoryId.toString()} : {label: "Null", value: null}
-        category.categoryId ? category.categoryId : -1,
+        },
+        category.parentCategory
     )
 
-    const [removeResponse, removeLoading, error, execution] = useDELETEApi(`/categories/${category.id}`, true, false)
+    const {data, setData, edited} = useEditForm(category);
+
+    const [updateResponse, updateLoading, updateError, updateRequestWrapper] = useExtendedRequest()
+    const [removeResponse, removeLoading, removeError, removeRequestWrapper] = useExtendedRequest()
 
     function removeCategory() {
-        execution()
+        removeRequestWrapper(() => CategoryService.deleteCategory(category.id!, token!))
+    }
+
+    function updateCategory() {
+        const updateObj = editCategoryForm.getFieldsValue()
+        console.log('Category update:', updateObj)
+        updateRequestWrapper(
+            () => CategoryService.updateCategory(category.id!, updateObj, token!), () => message.success("Updated!"))
     }
 
     useEffect(() => {
-        if (removeResponse && !error) {
+        if (removeResponse && !removeError) {
             history.goBack()
         }
     }, [removeResponse]);
+
+    const [editCategoryForm] = Form.useForm();
+
 
     const menuItems = category.innerCategories?.map(innerCategory =>
         <Menu.Item key="1" icon={<UnorderedListOutlined/>}>
@@ -50,54 +85,68 @@ const CategoryInfoCard: React.FC<ICategoryInfoProps> = ({category}) => {
     return (
         <Layout>
             <Card style={{margin: '14px 16px'}}>
-                <Row justify={"space-between"}>
-                    <Text>CategoryID: </Text>
-                    <Text>{category.id}</Text>
-                </Row>
-                <Divider/>
-                <Row justify={"space-between"}>
-                    <Text>Category: </Text>
-                    <Text>{category.name}</Text>
-                </Row>
-                <Divider/>
-                <Row justify={"space-between"}>
-                    <Form.Item label="Parent category ID: ">
-                        <Select
-                            showSearch
-                            style={{width: 200}}
-                            placeholder="Select a category"
-                            {...selectParams}
-                        />
-                    </Form.Item>
-                </Row>
-                <Divider/>
-                <Row justify={"space-between"}>
-                    <Text>Inner categories: </Text>
+                <Form
+                    form={editCategoryForm}
+                    initialValues={data}
+                    onValuesChange={(e) => console.log(e)}
+                >
+                    <Row>
+                        <Form.Item name={'id'} label="CategoryID: ">
+                            <Input disabled/>
+                        </Form.Item>
+                        <Divider/>
+                        <Form.Item name={'name'} label="Category: ">
+                            <Input />
+                        </Form.Item>
+                    </Row>
+                    <Divider/>
+                    <Row justify={"space-between"}>
+                        <Form.Item name={'parentCategoryId'} label="Parent category: ">
+                            <Select
+                                showSearch
+                                style={{width: 200}}
+                                placeholder="Select a category"
+                                {...selectParams}
+                            />
+                        </Form.Item>
+                    </Row>
+                    <Divider/>
+                    <Row justify={"space-between"}>
+                        <Text>Inner categories: </Text>
 
-                    {category.innerCategories.length ?
-                        <Dropdown overlay={<Menu>{menuItems}</Menu>}>
-                            <Button>
-                                Inner categories <DownOutlined/>
-                            </Button>
-                        </Dropdown>
-                        :
-                        <Text>Отсутствуют</Text>}
-                </Row>
+                        {category.innerCategories.length ?
+                            <Dropdown overlay={<Menu>{menuItems}</Menu>}>
+                                <Button>
+                                    Inner categories <DownOutlined/>
+                                </Button>
+                            </Dropdown>
+                            :
+                            <Text>Отсутствуют</Text>}
+                    </Row>
+                </Form>
 
-                <Divider/>
+                    <Divider/>
 
-                <Row justify={"end"}>
-                    <Button style={{color: "green", borderColor: "green", marginRight: '.7vw'}}>Save</Button>
-                    <ButtonWithConfirm
-                        title={"Удалить"}
-                        onConfirm={removeCategory}
-                        style={{color: "red", borderColor: "red"}}
-                        popconfirmTitle={"Удалить? "}
-                        loading={removeLoading}
-                    >
-                        Delete
-                    </ButtonWithConfirm>
-                </Row>
+                    <Row justify={"end"}>
+                        <Button
+                            style={{color: "green", borderColor: "green", marginRight: '.7vw'}}
+                            loading={updateLoading}
+                            // disabled={!edited}
+                            onClick={() => updateCategory()}
+                        >
+                            Update
+                        </Button>
+
+                        <ButtonWithConfirm
+                            title={"Удалить"}
+                            onConfirm={removeCategory}
+                            style={{color: "red", borderColor: "red"}}
+                            popconfirmTitle={"Удалить? "}
+                            loading={removeLoading}
+                        >
+                            Delete
+                        </ButtonWithConfirm>
+                    </Row>
             </Card>
         </Layout>
     );

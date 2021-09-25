@@ -1,3 +1,6 @@
+import {IBrand} from "./IBrand";
+import {ICategory} from "./ICategory";
+
 export interface IDevice {
     id?: number,
     name: string,
@@ -5,5 +8,7 @@ export interface IDevice {
     sale: number | null;
     availability: number;
     brandId: number;
+    brand: IBrand | undefined;
+    categories: ICategory[]
     image: string | null;
 }

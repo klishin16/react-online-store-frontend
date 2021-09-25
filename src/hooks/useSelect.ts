@@ -2,11 +2,11 @@ import {useGetApi} from "./useApi";
 
 type OptionProps = {
     label: string,
-    value: number
+    value: string | number
 }
 
-export default function<Data> (dataUrl: string, dataSerializer: (data: Data) => OptionProps[], defaultValue?: number) {
-    const [data, loading, error, execution] = useGetApi<Data>(dataUrl, true, false);
+export default function<OptionData> (dataUrl: string, dataSerializer: (data: OptionData) => OptionProps, value?: OptionData | OptionData[]) {
+    const [data, loading, error, execution] = useGetApi<OptionData[]>(dataUrl, true, false);
 
     function onChange(value: any) {
         console.log(`selected ${value}`);
@@ -31,14 +31,14 @@ export default function<Data> (dataUrl: string, dataSerializer: (data: Data) => 
         }
     }
 
-    const options: OptionProps[] = data ? dataSerializer(data): []
+    const options: OptionProps[] = data ? data.map(item => dataSerializer(item)) : []
 
     return {
         loading,
         options,
         filterOption,
         onDropdownVisibleChange,
-        defaultValue,
+        defaultValue: value ? Array.isArray(value) ? value.map(v => dataSerializer(v).label) : dataSerializer(value).label  : undefined,
         onBlur,
         onChange,
         onSearch

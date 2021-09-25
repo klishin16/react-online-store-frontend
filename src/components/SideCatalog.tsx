@@ -26,23 +26,23 @@ const CategorySubMenuItem = styled(Menu.SubMenu)`
 `
 
 
-const renderHighCategory = (category: ICategory, leafCategoriesMap: LeafCategoryMap, onClick: (selectedCategoryId: number) => void) => {
+const renderHighCategory = (category: ICategory, leafCategoriesMap: LeafCategoryMap, onClick: (selectedCategory: ICategory) => void) => {
     if (leafCategoriesMap.has(category.id!)) {
-        return (<CategorySubMenuItem key={category.id} title={category.name} onTitleClick={() => onClick(category.id!)}>
+        return (<CategorySubMenuItem key={category.id} title={category.name} onTitleClick={() => onClick(category)}>
             {renderLeafCategories(category, leafCategoriesMap, onClick)}
         </CategorySubMenuItem>)
     } else {
-        return (<CategoryMenuItem onClick={() => onClick(category.id!)}>{category.name}</CategoryMenuItem>)
+        return (<CategoryMenuItem key={category.id} onClick={() => onClick(category)}>{category.name}</CategoryMenuItem>)
     }
 }
 
-const renderLeafCategories = (highCategory: ICategory, leafCategoriesMap: LeafCategoryMap, onClick: (selectedCategoryId: number) => void) => leafCategoriesMap.get(highCategory.id!)!.map(leafCategory => {
+const renderLeafCategories = (highCategory: ICategory, leafCategoriesMap: LeafCategoryMap, onClick: (selectedCategory: ICategory) => void) => leafCategoriesMap.get(highCategory.id!)!.map(leafCategory => {
     if (leafCategoriesMap.has(leafCategory.id!)) {
-        return <CategorySubMenuItem>
+        return <CategorySubMenuItem key={leafCategory.id} title={leafCategory.name} onTitleClick={() => onClick(leafCategory)}>
                 {renderLeafCategories(leafCategory, leafCategoriesMap, onClick)}
         </CategorySubMenuItem>
     } else {
-        return <CategoryMenuItem onClick={() => onClick(leafCategory.id!)}>{leafCategory.name}</CategoryMenuItem>
+        return <CategoryMenuItem key={leafCategory.id} onClick={() => onClick(leafCategory)}>{leafCategory.name}</CategoryMenuItem>
     }
 })
 
@@ -56,7 +56,7 @@ const SideCatalog: React.FC<ICatalogSidebarProps> = ({visible, onClose}) => {
     const history = useHistory()
     const [categories, loading, error, requestWrapper] = useExtendedRequest<undefined, ICategory[]>()
     const { token } = userTypedSelector(state => state.auth)
-    const { setCategoryId } = useActions()
+    const { setCategory } = useActions()
     const [categoriesTree, setCategoriesTree] = useState<CategoriesTree>({
         highCategories: new Array<ICategory>(),
         leafCategories: new Map<number, ICategory[]>()
@@ -70,18 +70,11 @@ const SideCatalog: React.FC<ICatalogSidebarProps> = ({visible, onClose}) => {
         if (categories) setCategoriesTree(buildCategoriesTree(categories))
     }, [categories])
 
-    function onCategorySelected(categoryId: number) {
-        setCategoryId(categoryId)
+    function onCategorySelected(category: ICategory) {
+        setCategory(category)
         onClose()
         history.push(RouteNames.DEVICES)
     }
-
-    // const highCategories = categoriesTree.highCategories.map((category, index) => (
-    //     <CategoryItemWrapper key={index}>
-    //         <Link onClick={() => onCategorySelected(category)} to={RouteNames.DEVICES}>{category.name}</Link>
-    //         {categoriesTree.leafCategories.has(category.id!) && <RightOutlined/>}
-    //     </CategoryItemWrapper>
-    // ))
 
 
     return (

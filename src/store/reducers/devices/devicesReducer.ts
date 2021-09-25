@@ -3,9 +3,11 @@ import {DevicesAction, DevicesActionEnum, DevicesState} from "./types";
 
 const initialState: DevicesState = {
     q: undefined,
-    categoryId: undefined,
+    category: undefined,
     brands: null,
     devices: [],
+    minPrice: undefined,
+    maxPrice: undefined,
     isLoading: false,
     error: ""
 }
@@ -18,12 +20,18 @@ export default function devicesReducer(state = initialState, action: DevicesActi
             return {...state, q: action.payload}
 
         case DevicesActionEnum.SET_CATEGORY:
-            return {...state, categoryId: action.payload}
+            return {...state, category: action.payload}
 
         case DevicesActionEnum.SET_BRANDS:
             return {...state, brands: action.payload}
         case DevicesActionEnum.SET_DEVICES:
             return {...state, devices: action.payload}
+
+        case DevicesActionEnum.SET_MIN_PRICE:
+            return {...state, minPrice: action.payload}
+
+        case DevicesActionEnum.SET_MAX_PRICE:
+            return {...state, maxPrice: action.payload}
 
         case DevicesActionEnum.SET_ERROR:
             return {...state, error: action.payload, isLoading: false}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {IAdminViewProps} from "../types";
 import AdminViewHeader, {IBreadcrumbRoute} from "../AdminViewHeader";
 import {Button, Card, Layout, Row, Table, Typography} from "antd";
@@ -12,13 +12,19 @@ import AdminCategoryDetailView from "./AdminCategoryDetailView";
 import {AppColors} from "../../../styles/colors";
 import CategoryCreationForm, {CategoryCreationValues} from "./CategoryCreationForm";
 import useModalForm from "../../../hooks/useModalForm";
+import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import CategoryService from "../../../API/CategoryService";
+import {userTypedSelector} from "../../../hooks/userTypedSelector";
 
 
 interface IAdminCategoriesViewProps extends IAdminViewProps { }
 
 const AdminCategoriesView: React.FC<IAdminViewProps> = ({breadcrumbPath}) => {
-    const [categories, loading, error, refreshCategories] = useGetApi<ICategory[]>('/categories')
+    const [categories, loading, error, requestWrapper] = useExtendedRequest<undefined, ICategory[]>()
     const {path, url} = useRouteMatch()
+    const history = useHistory()
+
+    const { token } = userTypedSelector(state => state.auth)
 
     const {showModal, ...categoryCreationFormProps} = useModalForm<CategoryCreationValues>("Create new category", '/categories')
 
@@ -28,11 +34,10 @@ const AdminCategoriesView: React.FC<IAdminViewProps> = ({breadcrumbPath}) => {
             render: (id: number) => <Link to={url + '/' + id}>{id}</Link>
         },
         {
-            title: 'name',
-            render: (name: string) => <a>{name}</a>
+            title: 'name'
         },
         {
-            title: 'categoryId',
+            title: 'parentCategoryId',
             render: (categoryId: number | null) =>
                 <Typography.Text>{categoryId ? categoryId : 'Отсутствует'}</Typography.Text>
         }
@@ -46,8 +51,11 @@ const AdminCategoriesView: React.FC<IAdminViewProps> = ({breadcrumbPath}) => {
         }
     ]
 
-    const history = useHistory()
+    function refreshCategories() {
+        requestWrapper(() => CategoryService.getAllCategories(token!))
+    }
 
+    useEffect(refreshCategories, [])
 
     return (
         <div>

@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Button, Card, Divider, Form, Input, Layout, message, Row, Typography} from "antd";
 import {IBrand} from "../../../models/IBrand";
 import ButtonWithConfirm from "../../ButtonWithConfirm";
-import {HttpMethods, useDELETEApi} from "../../../hooks/useApi";
 import {useHistory} from "react-router-dom";
-import {RequestBuilder} from "../../../functions/RequestBuilder";
 import {userTypedSelector} from "../../../hooks/userTypedSelector";
-import axios from "axios";
 import useExtendedRequest from "../../../hooks/useExtendedRequest";
+import {BrandService} from "../../../API/BrandService";
+import {useEditForm} from "../../../hooks/useEditForm";
 
 
 interface IBrandInfoProps {
@@ -19,24 +18,23 @@ const {Text} = Typography
 const BrandInfoCard: React.FC<IBrandInfoProps> = ({brand}) => {
     const history = useHistory()
 
-    const [brandUpdated, setBrandUpdated] = useState(brand);
+    const {data, setData, edited} = useEditForm(brand);
 
     const { token } = userTypedSelector(state => state.auth)
 
     const [updateResponse, updateLoading, updateError, requestWrapper] = useExtendedRequest()
-    const [removeResponse, removeLoading, error, execution] = useDELETEApi(`/brands/${brand.id}`, true, false)
+    const [removeResponse, removeLoading, removeError, removeRequestWrapper] = useExtendedRequest()
 
     function removeBrand() {
-        execution()
+        removeRequestWrapper(() => BrandService.deleteBrand(brand.id!, token!), () => message.success('Deleted!'))
     }
 
     function updateBrand(updateObj: Partial<IBrand>) {
-        const rb = new RequestBuilder(`/brands/${brand.id}`, HttpMethods.PATCH, updateObj).includeToken(token!)
-        requestWrapper(() => axios(rb.build()), () => message.success("Updated!"))
+        requestWrapper(() => BrandService.updateBrand(brand.id!, updateObj, token!), () => message.success("Updated!"))
     }
 
     useEffect(() => {
-        if (removeResponse && !error) {
+        if (removeResponse && !removeError) {
             history.goBack()
         }
     }, [removeResponse]);
@@ -55,12 +53,12 @@ const BrandInfoCard: React.FC<IBrandInfoProps> = ({brand}) => {
                     <Divider/>
                     <Row justify={"space-between"}>
                         <Form.Item label="Brand: ">
-                            <Input value={brandUpdated.name} onChange={(e) => setBrandUpdated({...brandUpdated, name: e.target.value})}/>
+                            <Input value={data.name} onChange={(e) => setData({...data, name: e.target.value})}/>
                         </Form.Item>
                     </Row>
                     <Row justify={"space-between"}>
                         <Form.Item label="Description: ">
-                            <Input value={brandUpdated.description} onChange={(e) => setBrandUpdated({...brandUpdated, description: e.target.value})}/>
+                            <Input value={data.description} onChange={(e) => setData({...data, description: e.target.value})}/>
                         </Form.Item>
                     </Row>
                 </Form>
@@ -70,9 +68,10 @@ const BrandInfoCard: React.FC<IBrandInfoProps> = ({brand}) => {
 
                 <Row justify={"end"}>
                     <Button
+                        disabled={!edited}
                         style={{color: "green", borderColor: "green", marginRight: '.7vw'}}
                         loading={updateLoading}
-                        onClick={() => updateBrand(brandUpdated)}
+                        onClick={() => updateBrand(data)}
                     >Update</Button>
                     <ButtonWithConfirm
                         title={"Удалить"}

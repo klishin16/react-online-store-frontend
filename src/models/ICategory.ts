@@ -1,6 +1,7 @@
 export interface ICategory {
     id?: number,
     name: string,
-    categoryId: number | null
+    parentCategoryId: number | null,
+    parentCategory: ICategory | undefined,
     innerCategories: ICategory[]
 }
